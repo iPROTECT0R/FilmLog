@@ -1,0 +1,89 @@
+@model IEnumerable<FilmLog.Models.Film>
+
+<!-- Search Form -->
+<form method="get" asp-action="Index" id="searchForm" class="d-flex">
+    <input type="text" id="searchQuery" name="searchQuery" placeholder="Search films..." class="form-control" oninput="getSuggestions(this.value)" />
+    <button type="submit" class="btn btn-primary ms-2">Search</button>
+</form>
+
+<!-- Add some padding between the search bar and "Create New Film" button -->
+<p class="mt-3">
+    <a href="@Url.Action("Create")" class="btn btn-success">Create New Film</a>
+</p>
+
+<!-- Autocomplete suggestions (this will show up as the user types) -->
+<ul id="suggestions" style="display: none; position: absolute; background-color: white; border: 1px solid #ccc; max-height: 200px; overflow-y: auto; width: 100%; z-index: 999;">
+</ul>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Title)</th>
+            <th>@Html.DisplayNameFor(model => model.Description)</th>
+            <th>@Html.DisplayNameFor(model => model.Director)</th>
+            <th>@Html.DisplayNameFor(model => model.ReleaseDate)</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Title</td>
+            <td>@item.Description</td>
+            <td>@item.Director</td>
+            <td>@item.ReleaseDate.ToString("yyyy-MM-dd")</td>
+            <td>
+                <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-warning btn-sm">Edit</a>
+            </td>
+            <td>
+                <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<!-- Add jQuery (required for autocomplete) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    // Function to get search suggestions using AJAX
+    function getSuggestions(query) {
+        if (query.length > 0) {
+            $.ajax({
+                url: '@Url.Action("SearchSuggestions")',
+                data: { term: query },
+                success: function (data) {
+                    let suggestionsList = $('#suggestions');
+                    suggestionsList.empty();
+                    if (data.length > 0) {
+                        data.forEach(function (suggestion) {
+                            suggestionsList.append('<li class="suggestion-item">' + suggestion + '</li>');
+                        });
+                        suggestionsList.show();
+                    } else {
+                        suggestionsList.hide();
+                    }
+                }
+            });
+        } else {
+            $('#suggestions').hide();
+        }
+    }
+
+    // Hide suggestions when the user clicks elsewhere
+    $(document).click(function (e) {
+        if (!$(e.target).closest('#suggestions').length && !$(e.target).closest('#searchQuery').length) {
+            $('#suggestions').hide();
+        }
+    });
+
+    // Add selected suggestion to the input field when clicked
+    $(document).on('click', '.suggestion-item', function () {
+        $('#searchQuery').val($(this).text());
+        $('#suggestions').hide();
+        $('#searchForm').submit(); // Trigger form submission
+    });
+</script>

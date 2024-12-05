@@ -1,0 +1,37 @@
+@model FilmLog.Models.RegisterViewModel
+
+<h2>Register</h2>
+
+<!-- The form to allow new users to register an account -->
+<form method="post" asp-action="Register">
+    
+    <!-- Email input field for the user's email address -->
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+        <!-- Display validation error message for Email if there is one -->
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    
+    <!-- Password input field for the user's password -->
+    <div class="form-group">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" type="password" class="form-control" />
+        <!-- Display validation error message for Password if there is one -->
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    
+    <!-- Confirm password field to ensure the user enters the same password twice -->
+    <div class="form-group">
+        <label asp-for="ConfirmPassword"></label>
+        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+        <!-- Display validation error message for ConfirmPassword if there is one -->
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    <!-- Submit button to create the new account -->
+    <button type="submit" class="btn btn-success">Register</button>
+</form>
+
+<!-- Link to the login page for users who already have an account -->
+<p>Already have an account? <a href="@Url.Action("Login", "Account")">Login here</a></p>

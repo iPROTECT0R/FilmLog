@@ -1,0 +1,32 @@
+@model FilmLog.Models.Film
+
+<h2>Delete Film</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+
+<!-- Display the film details to confirm before deletion -->
+<div>
+    <h4>Film</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <!-- Display the title of the film -->
+        <dt>Title</dt>
+        <dd>@Model.Title</dd>
+
+        <!-- Display the release date of the film -->
+        <dt>Release Date</dt>
+        <dd>@Model.ReleaseDate.ToString("yyyy-MM-dd")</dd>
+    </dl>
+</div>
+
+<!-- Form to confirm and submit the deletion of the film -->
+<form asp-action="Delete" method="post">
+    <!-- Hidden input to pass the film's Id for deletion -->
+    <input type="hidden" asp-for="Id" />
+
+    <!-- Button to confirm and delete the film -->
+    <button type="submit" class="btn btn-danger">Delete</button>
+
+    <!-- Button to cancel and go back to the film list -->
+    <a href="@Url.Action("Index")" class="btn btn-secondary">Cancel</a>
+</form>
